@@ -10,4 +10,9 @@ public class ExampleController {
     String getTest(){
         return "Hello World";
     }
+
+    @GetMapping("/apitest2")
+    String getTest2(){
+        return "Hello!!!!!";
+    }
 }
