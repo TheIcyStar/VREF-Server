@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExampleController {
 
     @GetMapping("/apitest-alt")
-    String getTest2(){
+    String getTest3(){
         return "Goodbye World";
     }
 
