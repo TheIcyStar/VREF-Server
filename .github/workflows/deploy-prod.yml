@@ -3,26 +3,26 @@ on:
     push:
         tags: v*
     workflow_dispatch:
-        inputs:
-            tag:
-                type: string
-                description: "Commit ID override"
-                required: false
+        # inputs:
+        #     tag:
+        #         type: string
+        #         description: "Commit ID override"
+        #         required: false
 
 
 jobs:
-    determine-tag:
-        runs-on: self-hosted
-        steps:
-            - name: Determine tag
-              run: |
-                if [ -n "${{ github.event.inputs.tag }}"]
+    # determine-tag:
+    #     runs-on: self-hosted
+    #     steps:
+    #         - name: Determine tag
+    #           run: |
+    #             if [ -n "${{ github.event.inputs.tag }}"]
 
     call-build:
         uses: ./.github/workflows/build.yml
-        needs: determine-tag
+        # needs: determine-tag
         with:
-            tag: ${{ inputs.tag }}
+            tag: ${{ github.ref_name }}
     deploy:
         runs-on: self-hosted
         needs: call-build
@@ -32,4 +32,4 @@ jobs:
 
             - name: Start new container
 
-              run: sudo docker start vref-server:${{ inputs.tag }}
+              run: sudo docker run -p 3000:8080 -restart always --name vref-prod vref-server:${{ github.ref_name }}
