@@ -23,4 +23,4 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Build container
-              run: docker buildx build --tag vref-server:${{ inputs.tag }} .
+              run: sudo docker buildx build --tag vref-server:${{ inputs.tag }} .
