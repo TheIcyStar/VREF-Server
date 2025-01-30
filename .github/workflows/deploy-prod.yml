@@ -1,0 +1,35 @@
+name: Deploy Production Build
+on:
+    push:
+        tags: v*
+    workflow_dispatch:
+        inputs:
+            tag:
+                type: string
+                description: "Commit ID override"
+                required: false
+
+
+jobs:
+    determine-tag:
+        runs-on: self-hosted
+        steps:
+            - name: Determine tag
+              run: |
+                if [ -n "${{ github.event.inputs.tag }}"]
+
+    call-build:
+        uses: ./.github/workflows/build.yml
+        needs: determine-tag
+        with:
+            tag: ${{ inputs.tag }}
+    deploy:
+        runs-on: self-hosted
+        needs: call-build
+        steps:
+            - name: Stop old container
+              run: sudo docker stop -t 10 vref-prod
+
+            - name: Start new container
+
+              run: sudo docker start vref-server:${{ inputs.tag }}

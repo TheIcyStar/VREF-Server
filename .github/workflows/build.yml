@@ -7,6 +7,10 @@ on:
                 default: "gha-no-version"
                 description: "Tag assigned to built container"
                 required: false
+            # checkout-ref:
+            #     type: string
+            #     default: ${{ github.ref }}
+
     workflow_dispatch:
         inputs:
             tag:
@@ -21,6 +25,8 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
+              with:
+                ref: ${{ github.ref }}
 
             - name: Build container
               run: sudo docker buildx build --tag vref-server:${{ inputs.tag }} .
