@@ -1,0 +1,25 @@
+name: Deploy Test Build
+on:
+    push:
+        branches: [test]
+    workflow_dispatch:
+
+
+jobs:
+    call-build:
+        uses: ./.github/workflows/build.yml
+        # needs: determine-tag
+        with:
+            tag: "test"
+    deploy:
+        runs-on: self-hosted
+        needs: call-build
+        steps:
+            - name: Stop old container
+              continue-on-error: true
+              run: |
+                docker stop -t 10 vref-test &&\
+                docker container rm vref-test
+
+            - name: Start new container
+              run: docker run -d -p 3001:8080 --restart always --name vref-test vref-server:${{ github.ref_name }}

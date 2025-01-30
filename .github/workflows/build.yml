@@ -1,0 +1,32 @@
+name: Build Docker Container
+on:
+    workflow_call:
+        inputs:
+            tag:
+                type: string
+                default: "gha-no-version"
+                description: "Tag assigned to built container"
+                required: false
+            # checkout-ref:
+            #     type: string
+            #     default: ${{ github.ref }}
+
+    workflow_dispatch:
+        inputs:
+            tag:
+                type: string
+                description: "Tag assigned to built container"
+                required: true
+
+
+jobs:
+    build:
+        runs-on: self-hosted
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                ref: ${{ github.ref }}
+
+            - name: Build container
+              run: docker buildx build --tag vref-server:${{ inputs.tag }} .
