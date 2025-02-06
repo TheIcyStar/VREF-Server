@@ -1,3 +1,10 @@
 export type RoomData = {
-    asdf: number
+    roomId: string,
+    ownerId: number,
+    attendeeIds: number[],
+
+    roomState: {
+        equations: string[],
+        objects: string[]
+    }
 }
