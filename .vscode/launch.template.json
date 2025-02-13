@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "npm run dev",
+            "name": "TSC & Start",
+            "request": "launch",
+            "type": "node-terminal",
+            "preLaunchTask": "npm: buildDev",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
