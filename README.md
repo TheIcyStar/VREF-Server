@@ -50,3 +50,16 @@ Creates a room with a specified ID and returns `RoomData`.
     }
 }
 ```
+
+
+### **Get server status / protocol version**
+**GET**: `/`\
+Returns a basic json object for server reachability checks and protocol version checks
+
+`curl -X GET -H "Content-Type: application/json" localhost:3000/`
+```json
+{
+    "status": "ok",
+    "protocolVersion": 0
+}
+```

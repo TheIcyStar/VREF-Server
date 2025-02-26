@@ -9,6 +9,13 @@ const app = express()
 const port = process.env.PORT || 3000
 app.use(bodyParser.json())
 
+app.get("/", (req, res) => {
+    res.send(JSON.stringify({
+        status: "ok",
+        protocolVersion: 0
+    }))
+})
+
 /**
  * Returns all information about a room
  */
