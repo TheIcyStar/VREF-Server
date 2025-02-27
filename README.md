@@ -71,6 +71,24 @@ Creates a room with a generated ID and returns `RoomData`.
 ```
 
 
+### **Update room state**
+**POST**: `/rooms/[RoomID]/updatestate`\
+Updates the room state of the given room. Returns `RoomData`.
+`curl -X POST -H "Content-Type: application/json" -d '{"equations":["x+y","2x+2y"],"objects":[]}' localhost:3000/rooms/1/updatestate`
+```json
+{
+    "data": {
+        "roomId": "7",
+        "ownerId": 0,
+        "attendeeIds": [],
+        "roomState": {
+            "equations": ["x+y", "2x+2y"],
+            "objects": []
+        }
+    }
+}
+```
+
 ### **Get server status / protocol version**
 **GET**: `/`\
 Returns a basic json object for server reachability checks and protocol version checks
