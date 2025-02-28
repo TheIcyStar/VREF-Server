@@ -4,6 +4,7 @@ import { roomMap } from './roomManager'
 import type { RoomData } from './typedefs/RoomData'
 
 type ResponseJSON = {data: any | undefined, error: string | undefined}
+let autoRoomIdIncrement = 1
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -34,7 +35,7 @@ app.get("/rooms/:roomId", (req, res) => {
 })
 
 /**
- * Create a new room
+ * Create a new room with a specific ID
  */
 app.post("/rooms/:roomId/create", (req, res) => {
     res.setHeader('Content-Type', 'application/json')
@@ -58,6 +59,33 @@ app.post("/rooms/:roomId/create", (req, res) => {
         }
     }
     roomMap.set(req.params.roomId,newRoomData)
+
+    response.data = newRoomData
+    res.send(JSON.stringify(response))
+})
+
+/**
+ * Create a new room where the server decides the ID
+ */
+app.post("/rooms/autocreate", (req,res) => {
+    res.setHeader('Content-Type', 'application/json')
+    let response: ResponseJSON = {data: undefined, error: undefined}
+
+    while(roomMap.has(autoRoomIdIncrement.toString())){ //todo: replace with a random character generator?
+        autoRoomIdIncrement++;
+    }
+
+    let newRoomData: RoomData = {
+        roomId: autoRoomIdIncrement.toString(),
+        ownerId: 0,
+        attendeeIds: [],
+
+        roomState: {
+            equations: [],
+            objects: []
+        }
+    }
+    roomMap.set(autoRoomIdIncrement.toString(),newRoomData)
 
     response.data = newRoomData
     res.send(JSON.stringify(response))
