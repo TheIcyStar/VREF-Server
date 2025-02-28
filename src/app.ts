@@ -91,6 +91,28 @@ app.post("/rooms/autocreate", (req,res) => {
     res.send(JSON.stringify(response))
 })
 
+/**
+ * Update the state of a specific room
+ * Expects a {RoomData.RoomState} json object
+ */
+app.post("/rooms/:roomId/updatestate", (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
+    let response: ResponseJSON = {data: undefined, error: undefined}
+
+    if(!roomMap.has(req.params.roomId)){
+        response.error = "No such room"
+        res.status(404).send(JSON.stringify(response))
+        return
+    }
+
+    let updatedRoomState = req.body
+
+    let newRoomData = {...roomMap.get(req.params.roomId)!, roomState: updatedRoomState}
+    roomMap.set(req.params.roomId, newRoomData)
+
+    res.send(newRoomData)
+})
+
 
 app.listen(port, () => {
     console.log(`Express started on port ${port}`)

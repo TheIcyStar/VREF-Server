@@ -4,7 +4,9 @@ export type RoomData = {
     attendeeIds: number[],
 
     roomState: {
-        equations: string[],
+        equations: Equation[],
         objects: string[]
     }
 }
+
+export type Equation = string
