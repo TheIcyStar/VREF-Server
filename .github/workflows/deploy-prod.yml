@@ -3,24 +3,11 @@ on:
     push:
         tags: v*
     workflow_dispatch:
-        # inputs:
-        #     tag:
-        #         type: string
-        #         description: "Commit ID override"
-        #         required: false
 
 
 jobs:
-    # determine-tag:
-    #     runs-on: self-hosted
-    #     steps:
-    #         - name: Determine tag
-    #           run: |
-    #             if [ -n "${{ github.event.inputs.tag }}"]
-
     call-build:
         uses: ./.github/workflows/build.yml
-        # needs: determine-tag
         with:
             tag: ${{ github.ref_name }}
     deploy:
