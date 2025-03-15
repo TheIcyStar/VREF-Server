@@ -1,12 +1,27 @@
 export type RoomData = {
     roomId: string,
-    ownerId: number,
-    attendeeIds: number[],
+    ownerUpdateToken: string,
 
     roomState: {
-        equations: Equation[],
-        objects: string[]
+        settings: GraphSettings,
+        equations: EquationParseTreeNode[],
     }
 }
 
-export type Equation = string
+type Token = {text: string, type: number}
+
+type EquationParseTreeNode = {
+    token: Token,
+    left: EquationParseTreeNode | null
+    right: EquationParseTreeNode | null
+}
+
+type GraphSettings = {
+    xMin: number,
+    xMax: number,
+    yMin: number,
+    yMax: number,
+    zMin: number,
+    zMax: number,
+    step: number
+}

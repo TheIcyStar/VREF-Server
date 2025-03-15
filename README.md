@@ -12,21 +12,24 @@ Any errors, along with a 4xx or 5xx HTTP response code, will return json with a 
 ```
 
 
-### **Get all room information**
+### **Get room state**
 **GET**: `/rooms/[RoomId]`\
-Returns the `RoomData` object for a given room id.
+Returns the `RoomState` object for a given room id.
 
 `curl -X GET -H "Content-Type: application/json" localhost:3000/rooms/7`
 ```json
 {
     "data": {
-        "roomId": "7",
-        "ownerId": 0,
-        "attendeeIds": [0, 0, 0],
-        "roomState": {
-            "equations": ["", "", ""],
-            "objects": ["", "", ""]
-        }
+        "settings": {
+            "xMin": -10,
+            "xMax": 10,
+            "yMin": -10,
+            "yMax": 10,
+            "zMin": -10,
+            "zMax": 10,
+            "step": 1
+        },
+        "equations": []
     }
 }
 ```
@@ -34,37 +37,53 @@ Returns the `RoomData` object for a given room id.
 
 ### **Create a room**
 **POST**: `/rooms/[RoomId]/create`\
-Creates a room with a specified ID and returns `RoomData`.
+Creates a room with a specified ID and returns `RoomData`.\
+Be sure to save the `ownerUpdateToken`.
 
 `curl -X POST -H "Content-Type: application/json" localhost:3000/rooms/7/create`
 ```json
 {
     "data": {
         "roomId": "7",
-        "ownerId": 0,
-        "attendeeIds": [],
+        "ownerUpdateToken": "some-long-string",
         "roomState": {
-            "equations": [],
-            "objects": []
+            "settings": {
+                "xMin": -10,
+                "xMax": 10,
+                "yMin": -10,
+                "yMax": 10,
+                "zMin": -10,
+                "zMax": 10,
+                "step": 1
+            },
+            "equations": []
         }
     }
 }
 ```
 
 ### **Create a room with an automatic ID**
-**POST*: `/rooms/autocreate`\
+**POST**: `/autocreate`\
 Creates a room with a generated ID and returns `RoomData`.
+Be sure to save the `ownerUpdateToken`.
 
 `curl -X POST -H "Content-Type: application/json" localhost:3000/rooms/autocreate`
 ```json
 {
     "data": {
         "roomId": "???",
-        "ownerId": 0,
-        "attendeeIds": [],
+        "ownerUpdateToken": "some-long-string",
         "roomState": {
-            "equations": [],
-            "objects": []
+            "settings": {
+                "xMin": -10,
+                "xMax": 10,
+                "yMin": -10,
+                "yMax": 10,
+                "zMin": -10,
+                "zMax": 10,
+                "step": 1
+            },
+            "equations": []
         }
     }
 }
@@ -73,20 +92,20 @@ Creates a room with a generated ID and returns `RoomData`.
 
 ### **Update room state**
 **POST**: `/rooms/[RoomID]/updatestate`\
-Updates the room state of the given room. Returns `RoomData`.
-`curl -X POST -H "Content-Type: application/json" -d '{"equations":["x+y","2x+2y"],"objects":[]}' localhost:3000/rooms/1/updatestate`
+Updates the room state of the given room. Returns `{data: "ok"}`.
+
+```sh
+curl -X POST -H "Content-Type: application/json" -d \
+'{"key": "update key", "roomState": {RoomState json object}}' \
+localhost:3000/rooms/1/updateState
+```
+200 example:
 ```json
-{
-    "data": {
-        "roomId": "7",
-        "ownerId": 0,
-        "attendeeIds": [],
-        "roomState": {
-            "equations": ["x+y", "2x+2y"],
-            "objects": []
-        }
-    }
-}
+{ "status": "ok" }
+```
+403 example:
+```json
+{ "error": "Bad update key" }
 ```
 
 ### **Get server status / protocol version**

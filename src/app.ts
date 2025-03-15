@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import { roomMap } from './roomManager'
+import { roomMap, genRandomKey } from './roomManager'
 import type { RoomData } from './typedefs/RoomData'
 
 type ResponseJSON = {data: any | undefined, error: string | undefined}
@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 })
 
 /**
- * Returns all information about a room
+ * Returns a room's RoomState
  */
 app.get("/rooms/:roomId", (req, res) => {
     res.setHeader('Content-Type', 'application/json')
@@ -30,7 +30,7 @@ app.get("/rooms/:roomId", (req, res) => {
         return
     }
 
-    response.data = roomMap.get(req.params.roomId)
+    response.data = roomMap.get(req.params.roomId)!.roomState
     res.send(JSON.stringify(response))
 })
 
@@ -50,12 +50,19 @@ app.post("/rooms/:roomId/create", (req, res) => {
 
     let newRoomData: RoomData = {
         roomId: req.params.roomId,
-        ownerId: 0,
-        attendeeIds: [],
+        ownerUpdateToken: genRandomKey(),
 
         roomState: {
+            settings: {
+                xMin: -10,
+                xMax: 10,
+                yMin: -10,
+                yMax: 10,
+                zMin: -10,
+                zMax: 10,
+                step: 1
+            },
             equations: [],
-            objects: []
         }
     }
     roomMap.set(req.params.roomId,newRoomData)
@@ -67,7 +74,7 @@ app.post("/rooms/:roomId/create", (req, res) => {
 /**
  * Create a new room where the server decides the ID
  */
-app.post("/rooms/autocreate", (req,res) => {
+app.post("/autocreate", (req,res) => {
     res.setHeader('Content-Type', 'application/json')
     let response: ResponseJSON = {data: undefined, error: undefined}
 
@@ -77,12 +84,19 @@ app.post("/rooms/autocreate", (req,res) => {
 
     let newRoomData: RoomData = {
         roomId: autoRoomIdIncrement.toString(),
-        ownerId: 0,
-        attendeeIds: [],
+        ownerUpdateToken: genRandomKey(),
 
         roomState: {
+            settings: {
+                xMin: -10,
+                xMax: 10,
+                yMin: -10,
+                yMax: 10,
+                zMin: -10,
+                zMax: 10,
+                step: 1
+            },
             equations: [],
-            objects: []
         }
     }
     roomMap.set(autoRoomIdIncrement.toString(),newRoomData)
@@ -105,12 +119,17 @@ app.post("/rooms/:roomId/updatestate", (req, res) => {
         return
     }
 
-    let updatedRoomState = req.body
+    let oldRoomData = roomMap.get(req.params.roomId)!
+    if(req.body.key != oldRoomData.ownerUpdateToken){
+        response.error = "Bad update key"
+        res.status(403).send(JSON.stringify(response))
+        return
+    }
 
-    let newRoomData = {...roomMap.get(req.params.roomId)!, roomState: updatedRoomState}
+    let newRoomData = {...oldRoomData, roomState: req.body.roomState}
     roomMap.set(req.params.roomId, newRoomData)
 
-    res.send(newRoomData)
+    res.send({status: "ok"})
 })
 
 
