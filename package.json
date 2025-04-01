@@ -6,7 +6,8 @@
   "scripts": {
     "buildDev": "tsc --sourcemap",
     "build": "tsc",
-    "dev": "node ./build/app.js"
+    "dev": "node ./build/app.js",
+    "generate:swagger": "tsx ./src/scripts/swagger.ts"
   },
   "license": "MIT",
   "devDependencies": {
@@ -15,7 +16,11 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@types/swagger-jsdoc": "^6.0.4",
     "body-parser": "^1.20.3",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-dist": "^5.20.2",
+    "tsx": "^4.19.3"
   }
 }
