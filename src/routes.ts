@@ -286,7 +286,15 @@ routes.post("/rooms/:roomId/updatestate", (req, res) => {
  *             type:
  *               type: number
  *         left:
- *           $ref: '#/components/schemas/EquationParseTreeNode'
+ *           description: The left subtree
+ *           type: object
+ *           oneOf:
+ *             - $ref: '#/components/schemas/EquationParseTreeNode'
+ *             - type: 'null'
  *         right:
- *           $ref: '#/components/schemas/EquationParseTreeNode'
+ *           description: The right subtree
+ *           type: object
+ *           allOf:
+ *             - $ref: '#/components/schemas/EquationParseTreeNode'
+ *             - type: 'null'
  */

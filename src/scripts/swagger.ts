@@ -14,5 +14,6 @@ const options = {
 }
 
 const outPath = path.join(__dirname, "../../build/swagger.json")
+fs.mkdirSync(path.join(__dirname, "../../build"), { recursive: true })
 fs.writeFileSync(outPath, JSON.stringify(swaggerJSDoc(options)))
 console.log(`Generated swagger schema in ${outPath}`)
