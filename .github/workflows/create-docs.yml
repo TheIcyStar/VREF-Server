@@ -1,6 +1,8 @@
 name: Create swagger documentation
 on:
   push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
