@@ -22,6 +22,7 @@ Builds of VREF-Server are not available at this time, so you will need to clone 
 3. Compile with `npm run build`
 4. Run the server with `npm run dev`
 
-
 # Development
 A `launch.tempalte.json` example is available to run and debug the server. Rename to `launch.json` and hit F5 to start debugging.
+
+Tests can be ran with `npm run test`

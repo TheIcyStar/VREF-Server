@@ -8,6 +8,14 @@
             "type": "node-terminal",
             "preLaunchTask": "npm: buildDev",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "command": "npm run test",
+            "name": "TSC & Test",
+            "request": "launch",
+            "type": "node-terminal",
+            "preLaunchTask": "npm: buildDev",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
