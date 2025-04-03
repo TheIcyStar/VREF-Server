@@ -1,121 +1,27 @@
 # VREF-Server
 
-Readme coming soon!
+Synchronization server for [VREF](https://github.com/TheIcyStar/VREF), a Virtual Reality graphing calculator.
+
+This server allows lecturers to synchronize their graphing environments to students, with support for multiple "rooms".
+
+API documentation is available at https://theicystar.github.io/VREF-Server
+
+# Running the server
+
+### With Docker Compose (Recommended)
+Builds of VREF-Server are not available at this time, so you will need to clone this repository to build the container.
+
+0. Ensure that [Docker Engine is installed](https://docs.docker.com/engine/install/) and that `docker compose` is available.
+1. Download the source of this repository (e.g. `git clone`)
+2. In the project directory, run `docker compose up -d`. This will build and run the container.
+
+### With node
+0. Install the latest NodeJS LTS
+1. Download the source of this repository (e.g. `git clone`)
+2. Install dependencies with `npm install`
+3. Compile with `npm run build`
+4. Run the server with `npm run dev`
 
 
-## API Examples
-
-### **Error Messages**
-Any errors, along with a 4xx or 5xx HTTP response code, will return json with a user-friendly error message:
-```json
-{ "error": "No such room" }
-```
-
-
-### **Get room state**
-**GET**: `/rooms/[RoomId]`\
-Returns the `RoomState` object for a given room id.
-
-`curl -X GET -H "Content-Type: application/json" localhost:3000/rooms/7`
-```json
-{
-    "data": {
-        "settings": {
-            "xMin": -10,
-            "xMax": 10,
-            "yMin": -10,
-            "yMax": 10,
-            "zMin": -10,
-            "zMax": 10,
-            "step": 1
-        },
-        "equations": []
-    }
-}
-```
-
-
-### **Create a room**
-**POST**: `/rooms/[RoomId]/create`\
-Creates a room with a specified ID and returns `RoomData`.\
-Be sure to save the `ownerUpdateToken`.
-
-`curl -X POST -H "Content-Type: application/json" localhost:3000/rooms/7/create`
-```json
-{
-    "data": {
-        "roomId": "7",
-        "ownerUpdateToken": "some-long-string",
-        "roomState": {
-            "settings": {
-                "xMin": -10,
-                "xMax": 10,
-                "yMin": -10,
-                "yMax": 10,
-                "zMin": -10,
-                "zMax": 10,
-                "step": 1
-            },
-            "equations": []
-        }
-    }
-}
-```
-
-### **Create a room with an automatic ID**
-**POST**: `/autocreate`\
-Creates a room with a generated ID and returns `RoomData`.
-Be sure to save the `ownerUpdateToken`.
-
-`curl -X POST -H "Content-Type: application/json" localhost:3000/rooms/autocreate`
-```json
-{
-    "data": {
-        "roomId": "???",
-        "ownerUpdateToken": "some-long-string",
-        "roomState": {
-            "settings": {
-                "xMin": -10,
-                "xMax": 10,
-                "yMin": -10,
-                "yMax": 10,
-                "zMin": -10,
-                "zMax": 10,
-                "step": 1
-            },
-            "equations": []
-        }
-    }
-}
-```
-
-
-### **Update room state**
-**POST**: `/rooms/[RoomID]/updatestate`\
-Updates the room state of the given room. Returns `{data: "ok"}`.
-
-```sh
-curl -X POST -H "Content-Type: application/json" -d \
-'{"key": "update key", "roomState": {RoomState json object}}' \
-localhost:3000/rooms/1/updateState
-```
-200 example:
-```json
-{ "status": "ok" }
-```
-403 example:
-```json
-{ "error": "Bad update key" }
-```
-
-### **Get server status / protocol version**
-**GET**: `/`\
-Returns a basic json object for server reachability checks and protocol version checks
-
-`curl -X GET -H "Content-Type: application/json" localhost:3000/`
-```json
-{
-    "status": "ok",
-    "protocolVersion": 0
-}
-```
+# Development
+A `launch.tempalte.json` example is available to run and debug the server. Rename to `launch.json` and hit F5 to start debugging.
